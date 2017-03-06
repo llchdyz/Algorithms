@@ -3,6 +3,7 @@ package search;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class BinarySearchTree<K extends Comparable<K>, V> implements Tree<K, V>, Iterable<K> {
@@ -79,6 +80,29 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements Tree<K, V>,
 	public int rank(K key) {
 		return rank(root, key);
 	}
+	
+	public List<K> rangeSearch(K lo, K hi) {
+		List<K> list = new LinkedList<>();
+		rangeSearch(root, lo, hi, list);
+		return list;
+	}
+	
+	private void rangeSearch(TreeNode node, K lo, K hi, List<K> list) {
+		if (node == null) return;
+		int loCmp = lo.compareTo(node.key), hiCmp = hi.compareTo(node.key);
+		if (loCmp > 0) {
+			rangeSearch(node.right, lo, hi, list);
+		}
+		else if (hiCmp < 0) {
+			rangeSearch(node.left, lo, hi, list);
+		}
+		else {
+			list.add(node.key);
+			rangeSearch(node.left, lo, hi, list);
+			rangeSearch(node.right, lo, hi, list);
+		}
+	}
+	
 	/**
 	 * number of nodes < key
 	 * @param node
